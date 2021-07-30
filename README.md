@@ -15,3 +15,5 @@ New client connected
 Enter text: Hello
 Server: Hello
 ```
+
+We're just using the sample code as a starting point. We'll have to edit and change it as we go to implement the other requirements. 
