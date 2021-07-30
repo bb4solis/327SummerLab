@@ -12,10 +12,11 @@ public class Server {
             System.out.println("Server is listening on port " + port);
 
             while (true) {
-                // waits for a connection to be made and accepts it
+                // Waits for a connection to be made and accepts it
                 Socket socket = serverSocket.accept();
                 System.out.println("New client connected");
 
+                // Create new thread with the new socket
                 // .start() executes this instance and runs its run method
                 new ServerThread(socket).start();
             }
