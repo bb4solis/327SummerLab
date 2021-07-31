@@ -3,13 +3,14 @@ import java.net.*;
 
 public class Server {
 
+    // Port that we'll be using
     static final int port = 1000;
 
     public static void main(String[] args) {
 
         // Creates a socket and bounds it to the specified port
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Server is listening on port " + port);
+            System.out.println("Listening on port " + port);
 
             while (true) {
                 // Waits for a connection to be made and accepts it

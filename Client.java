@@ -3,6 +3,7 @@ import java.io.*;
 
 public class Client {
 
+    // Port that we'll be using
     static final int port = 1000;
     static final String hostname = "localhost";
 
@@ -12,7 +13,7 @@ public class Client {
         try (Socket socket = new Socket(hostname, port)) {
 
             // Get socket's output stream
-            // Used to send primitive Java data types
+            // Used to send data to server
             OutputStream output = socket.getOutputStream();
 
             // Create a new PrintWriter from OutputStream
@@ -34,16 +35,14 @@ public class Client {
                 // Send message to server
                 writer.println(text);
 
-                // ! No idea what these things do
-
-                // Get socket's input stream
-                // Reads data from client via client socket
+                // Reads data from server via client socket
                 InputStream input = socket.getInputStream();
 
                 // InputStreamReader reads bytes and decodes them into characters
-                // BufferedReader reads text from the character input stream
+                // BufferedReader reads the characters as a string
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
+                // Gets message from server and prints out a reply
                 String time = reader.readLine();
                 System.out.println(time);
             }
