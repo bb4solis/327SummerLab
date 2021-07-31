@@ -4,7 +4,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ConcurrentHashMap;
 
-
+//we're going to have to rewrite this please ignore for now'
+/*
 public class serverSetUp{
   private static String serverName;//used later
   private static int portNum;//used later
@@ -31,3 +32,4 @@ public static void main(String[]args){
     ss.close();
 }
 }
+*/
