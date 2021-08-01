@@ -14,3 +14,6 @@ John and Brenda have commensed working on attempting to set up the network. 🚀
 
 ### 7/30/21
 :space_invader: John - I think I managed to wrap my head around the sample server code. I edited some of the comments so they should at make a little bit more sense. Will start trying to implement file sharing.
+7/31/20221
+John and Brenda have successfully managed to send files from server to client, while asking the user for input.
+Goal is to ask user if it would like to send new files to the server and only end until user has inputed no.
