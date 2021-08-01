@@ -55,5 +55,30 @@ public class Client {
             System.out.println("I/O error");
         }
     }
+    
+        public void basicUI(){
+        int choice;
+        Scanner scan = new Scanner(System.in);
+        do{
+            choice = scan.nextInt();
+            System.out.println("1. Send File \n2.Receive File \n3.Store File \n4.Sync File \n5.Delete File \n6.Exit");
+            switch (choice){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                default:
+                    System.out.println("Failed, try using numPad #1-6");
+            }
+        }while(choice !=6);
+    }
 
 }
