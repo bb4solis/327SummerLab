@@ -30,11 +30,10 @@ public class FileThread extends Thread {
             String text = "";
 
             // Loop until client exits
-            while (!text.equals("bye")) {
-                print.println("Enter path name for file: ");
+            do {
                 text = buff.readLine();
                 print.println("Server: " + text);
-            }
+            } while (!text.equals("bye"));
 
             clientSocket.close();
 

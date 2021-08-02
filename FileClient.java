@@ -50,8 +50,17 @@ public class FileClient {
             // PrintWriter formats them to a text format
             PrintWriter print = new PrintWriter(output, true);
 
+            // Reads data from server via client socket
+            InputStream input = socket.getInputStream();
+
+            // InputStreamReader reads bytes and decodes them into characters
+            // BufferedReader reads the characters as a string
+            BufferedReader buff = new BufferedReader(new InputStreamReader(input));
+
             // Console is used to read from and write to the console
             Console console = System.console();
+
+            String reply = "";
             String text = "";
 
             // Loops until client exits
@@ -63,17 +72,13 @@ public class FileClient {
                 // Send message to server
                 print.println(text);
 
-                // Reads data from server via client socket
-                InputStream input = socket.getInputStream();
-
-                // InputStreamReader reads bytes and decodes them into characters
-                // BufferedReader reads the characters as a string
-                BufferedReader buff = new BufferedReader(new InputStreamReader(input));
-
                 // Gets message from server and prints out a reply
-                String reply = buff.readLine();
+                reply = buff.readLine();
                 System.out.println(reply);
             }
+
+            socket.close();
+
         } catch (IOException e) {
             System.out.println("I/O error");
         }
