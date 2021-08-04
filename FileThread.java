@@ -21,14 +21,15 @@ public class FileThread implements Runnable {
             String choice = buff.readLine();
             while (choice != null) {
                 switch (choice) {
-                    case "1" -> receiveFile();
-                    case "2" -> {
+                    case "1":receiveFile();
+                    break;
+                    case "2":
                         String fileName;
                         while ((fileName = buff.readLine()) != null) {
                             sendFile(fileName);
                         }
-                    }
-                    default -> System.out.println("Enter number 1-4 to continue");
+                    break;
+                    default: System.out.println("Enter number 1-4 to continue");
                 }
                 buff.close();
                 break;

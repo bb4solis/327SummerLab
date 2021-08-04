@@ -40,22 +40,23 @@ public class FileClient {
             String choice;
             choice = buff.readLine();
             switch (Integer.parseInt(choice)) {
-                case 1 -> {
+                case 1:
                     file.println("1");
                     sendFile();
-                }
-                case 2 -> {
+                break;
+                case 2 :
                     file.println("2");
                     System.err.print("Enter file name: ");
                     name = buff.readLine();
                     receiveFile(name);
-                }
-                case 3 -> {
+                break;
+                case 3:
                     file.println("3");
                     storeFile();
-                }
-                case 4 -> System.exit(1);
-                default -> System.err.println("Enter number 1-4 to continue");
+                break;
+                case 4 :System.exit(1);
+                break;
+                default :System.err.println("Enter number 1-4 to continue");
             }
         } catch (IOException e) {
             e.printStackTrace();
