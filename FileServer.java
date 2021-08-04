@@ -1,7 +1,7 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FileServer {
 
@@ -10,7 +10,8 @@ public class FileServer {
     private static Socket client = null;
 
     public static void main(String[] args) throws IOException {
-
+        HashMap<Integer, Socket> clients = new HashMap<Integer, Socket>();
+        ArrayList<FileThread> threads = new ArrayList<FileThread>();
         // TODO: Change to a hash map
         // TODO: Broadcast changes to every client
 
@@ -29,10 +30,16 @@ public class FileServer {
                 // Waits for a connection with a client
                 client = server.accept();
                 System.out.println("New Client : " + client);
-
-                Thread t = new Thread(new FileThread(client));
+                clients.put(Integer.valueOf(client.getPort()), client);
+                System.out.println(clients);
+                FileThread fileThread = new FileThread(client);
+                Thread t = new Thread(fileThread);
 
                 t.start();
+
+                for (FileThread thread : threads) {
+                    thread.updateHashMap(clients);
+                }
 
             } catch (IOException e) {
                 System.out.println("Server exception");

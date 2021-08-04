@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.io.*;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +17,7 @@ public class FileClient {
     // Files
     private static String name;
     private static Socket clientSocket;
-    private static BufferedReader buff ;
+    private static BufferedReader buff;
     private static PrintStream file;
 
     public static void main(String[] args) throws IOException {
@@ -27,7 +28,7 @@ public class FileClient {
 
             // InputStreamReader reads bytes and decodes them into characters
             // BufferedReader reads the characters as a string
-            buff  = new BufferedReader(new InputStreamReader(System.in));
+            buff = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.out.println("Connect Failed, " + e.getMessage());
         }
@@ -62,6 +63,7 @@ public class FileClient {
         }
 
     }
+
     public static void sendFile() {
         try {
             name = "";
@@ -80,7 +82,7 @@ public class FileClient {
                 DataInputStream dataInput = new DataInputStream(bufferedInput);
                 dataInput.readFully(byteArray, 0, byteArray.length);
                 OutputStream os = clientSocket.getOutputStream();
-                //Sending information of the file name and size to the server
+                // Sending information of the file name and size to the server
                 DataOutputStream buffOutput = new DataOutputStream(os);
                 buffOutput.writeUTF(f.getName());
                 buffOutput.writeLong(byteArray.length);
@@ -90,8 +92,10 @@ public class FileClient {
 
                 System.out.println("Do you wish to send another file to the server? \n1.Yes \n2.No");
                 String answer = buff.readLine().toLowerCase(Locale.ROOT);
-                if(answer.equals("yes") || (Integer.parseInt(answer) == 1)) sendFile();
-                else System.exit(1);
+                if (answer.equals("yes") || (Integer.parseInt(answer) == 1))
+                    sendFile();
+                else
+                    System.exit(1);
             }
 
         } catch (Exception e) {
@@ -114,7 +118,7 @@ public class FileClient {
             }
             os.close();
             in.close();
-            System.out.println("File "+fileName+" received from Server.");
+            System.out.println("File " + fileName + " received from Server.");
 
         } catch (IOException ex) {
             Logger.getLogger(FileThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -126,5 +130,3 @@ public class FileClient {
     }
 
 }
-
-
