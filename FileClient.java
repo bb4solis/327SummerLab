@@ -55,7 +55,10 @@ public class FileClient {
                     file.println("3");
                     storeFile();
                 }
-                case 4 -> System.exit(1);
+                case 4 -> {
+                    clientSocket.close();
+                    System.exit(1);
+                }
                 default -> System.err.println("Enter number 1-4 to continue");
             }
         } catch (IOException e) {

@@ -9,7 +9,7 @@ public class FileThread implements Runnable {
 
     private Socket clientSocket;
     private BufferedReader buff;
-    HashMap<Integer, Socket> hashMap;
+    HashMap<Thread, Socket> clients;
 
     public FileThread(Socket client) {
         this.clientSocket = client;
@@ -30,6 +30,9 @@ public class FileThread implements Runnable {
                         while ((fileName = buff.readLine()) != null) {
                             sendFile(fileName);
                         }
+                    }
+                    case "4" -> {
+                        System.exit(1);
                     }
                     default -> System.out.println("Enter number 1-4 to continue");
                 }
@@ -97,8 +100,8 @@ public class FileThread implements Runnable {
 
     }
 
-    public void updateHashMap(HashMap<Integer, Socket> newMap) {
-        hashMap = newMap;
-        System.out.println(hashMap);
+    public void updateHashMap(HashMap<Thread, Socket> newClients) {
+        clients = newClients;
+        System.out.println(clients);
     }
 }

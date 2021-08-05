@@ -10,8 +10,9 @@ public class FileServer {
     private static Socket client = null;
 
     public static void main(String[] args) throws IOException {
-        HashMap<Integer, Socket> clients = new HashMap<Integer, Socket>();
-        ArrayList<FileThread> threads = new ArrayList<FileThread>();
+        HashMap<Thread, Socket> clients = new HashMap<Thread, Socket>();
+        HashMap<Socket, FileThread> fileThreads = new HashMap<Socket, FileThread>();
+
         // TODO: Change to a hash map
         // TODO: Broadcast changes to every client
 
@@ -20,6 +21,7 @@ public class FileServer {
             server = new ServerSocket(PORT);
             System.out.println("Listening on port " + PORT);
             System.out.println(server);
+
         } catch (IOException e) {
             System.out.println("Port already in use." + e.getMessage());
             return;
@@ -30,15 +32,26 @@ public class FileServer {
                 // Waits for a connection with a client
                 client = server.accept();
                 System.out.println("New Client : " + client);
-                clients.put(Integer.valueOf(client.getPort()), client);
-                System.out.println(clients);
+
                 FileThread fileThread = new FileThread(client);
                 Thread t = new Thread(fileThread);
-
                 t.start();
 
-                for (FileThread thread : threads) {
-                    thread.updateHashMap(clients);
+                clients.put(t, client);
+
+                // Removes disconnected clients
+                for (Thread thread : clients.keySet()) {
+                    if (!thread.isAlive()) {
+                        clients.remove(thread);
+                        fileThreads.remove(clients.get(thread));
+                    }
+                }
+
+                System.out.println(clients.size());
+
+                // Update clients
+                for (Socket socket : fileThreads.keySet()) {
+                    fileThreads.get(socket).updateHashMap(clients);
                 }
 
             } catch (IOException e) {
