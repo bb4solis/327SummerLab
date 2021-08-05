@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -9,6 +10,7 @@ public class FileThread implements Runnable {
 
     private Socket clientSocket;
     private BufferedReader buff;
+    HashMap<Thread, Socket> clients;
     private static final String path = "E:\\CECS\\327SummerLab\\SharedFolder\\";
 
     public FileThread(Socket client) {
@@ -18,7 +20,8 @@ public class FileThread implements Runnable {
     @Override
     public void run() {
         try {
-            // BufferedReader reads text from the InputStreamReader from character input stream
+            // BufferedReader reads text from the InputStreamReader from character input
+            // stream
             buff = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String choice = buff.readLine();
             while (choice != null) {
@@ -29,6 +32,9 @@ public class FileThread implements Runnable {
                         while ((fileName = buff.readLine()) != null) {
                             sendFile(fileName);
                         }
+                    }
+                    case "4" -> {
+                        System.exit(1);
                     }
                     default -> System.out.println("Enter number 1-4 to continue");
                 }
@@ -41,7 +47,6 @@ public class FileThread implements Runnable {
         }
     }
 
-
     public void sendFile(String name) {
         try {
             File f = new File(path, name);
@@ -50,9 +55,9 @@ public class FileThread implements Runnable {
             BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
             DataInputStream dataInput = new DataInputStream(bufferedInput);
             dataInput.readFully(byteArray, 0, byteArray.length);
-            OutputStream os = clientSocket.getOutputStream();
 
-            //Sending information of the file name and size to the server
+            OutputStream os = clientSocket.getOutputStream();
+            // Sending information of the file name and size to the server
             DataOutputStream buffOutput = new DataOutputStream(os);
             buffOutput.writeUTF(f.getName());
             buffOutput.writeLong(byteArray.length);
@@ -60,7 +65,12 @@ public class FileThread implements Runnable {
             buffOutput.flush();
             System.out.println("File " + name + " sent to Client\n");
 
-
+            System.out.println("Do you wish to send another file to the server? \n1.Yes \n2.No");
+            String answer = buff.readLine().toLowerCase(Locale.ROOT);
+            if (answer.equals("yes") || (Integer.parseInt(answer) == 1))
+                sendFile(name);
+            else
+                System.exit(1);
         } catch (Exception e) {
             System.out.println("Failed sending file, specified file does not exist in the directory");
         }
@@ -72,6 +82,7 @@ public class FileThread implements Runnable {
             DataInputStream dataInput = new DataInputStream(clientSocket.getInputStream());
             String fileName = dataInput.readUTF();
             OutputStream output = new FileOutputStream(path + fileName);
+
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -82,12 +93,18 @@ public class FileThread implements Runnable {
             dataInput.close();
 
             System.out.println("File "+fileName+" received from client");
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    public void syncFile(){
+    public void syncFile() {
 
+    }
+
+    public void updateHashMap(HashMap<Thread, Socket> newClients) {
+        clients = newClients;
+        System.out.println(clients);
     }
 }
