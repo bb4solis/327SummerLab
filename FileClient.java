@@ -21,9 +21,8 @@ public class FileClient {
     private static Socket clientSocket;
     private static BufferedReader buff;
     private static PrintStream file;
-    //change the path to whatever path you have
+    // change the path to whatever path you have
     private static final String path = "E:\\CECS\\327SummerLab\\Clients\\Client1\\";
-
 
     public static void main(String[] args) throws IOException {
 
@@ -38,12 +37,11 @@ public class FileClient {
             System.out.println("Connect Failed, " + e.getMessage());
         }
 
-
         // Used to send data to server
         file = new PrintStream(clientSocket.getOutputStream());
 
         try {
-            System.out.println("1.Send File \n2.Receive File \n3.Exit");
+            System.out.println("1.Send File \n2.Receive File \n3.Store Files \n4.Exit");
             String choice;
             choice = buff.readLine();
             switch (Integer.parseInt(choice)) {
@@ -51,19 +49,22 @@ public class FileClient {
                     file.println("1");
                     sendFile();
                     break;
-                case 2 :
+                case 2:
                     file.println("2");
                     System.err.print("Enter file name: ");
                     name = buff.readLine();
                     file.println(name);
                     receiveFile(name);
-                case 3 -> {
+                    break;
+                case 3:
                     file.println("3");
                     storeFile();
-                case 4 -> {
-                    clientSocket.close();
+                    break;
+                case 4:
                     System.exit(1);
-                default -> System.err.println("Enter number 1-4 to continue");
+                default:
+                    System.err.println("Enter number 1-4 to continue");
+                    break;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,7 +117,7 @@ public class FileClient {
             InputStream in = clientSocket.getInputStream();
             DataInputStream dataInput = new DataInputStream(in);
             fileName = dataInput.readUTF();
-            OutputStream os = new FileOutputStream(path+fileName);
+            OutputStream os = new FileOutputStream(path + fileName);
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
