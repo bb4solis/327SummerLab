@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.io.*;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileClient {
+public class FileClient2 {
 
     public final static int PORT = 1000;
     public final static String SERVER = "127.0.0.1";
@@ -19,10 +18,10 @@ public class FileClient {
     // Files
     private static String name;
     private static Socket clientSocket;
-    private static BufferedReader buff;
+    private static BufferedReader buff ;
     private static PrintStream file;
     //change the path to whatever path you have
-    private static final String path = "E:\\CECS\\327SummerLab\\Clients\\Client1\\";
+    private static final String path = "E:\\CECS\\327SummerLab\\Clients\\Client2\\";
 
 
     public static void main(String[] args) throws IOException {
@@ -33,7 +32,7 @@ public class FileClient {
 
             // InputStreamReader reads bytes and decodes them into characters
             // BufferedReader reads the characters as a string
-            buff = new BufferedReader(new InputStreamReader(System.in));
+            buff  = new BufferedReader(new InputStreamReader(System.in));
         } catch (IOException e) {
             System.out.println("Connect Failed, " + e.getMessage());
         }
@@ -57,53 +56,48 @@ public class FileClient {
                     name = buff.readLine();
                     file.println(name);
                     receiveFile(name);
-                case 3 -> {
-                    file.println("3");
-                    storeFile();
-                case 4 -> {
-                    clientSocket.close();
-                    System.exit(1);
-                default -> System.err.println("Enter number 1-4 to continue");
+                    break;
+                case 3 :System.exit(1);
+                    break;
+                default :System.err.println("Enter number 1-3 to continue");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
     public static void sendFile() {
         try {
-            name = "";
-            // Loops until client exits
-            while (!name.equals("bye")) {
+            // Get client inputs from buff and prints out a reply
+            System.err.println("Enter name of file: ");
+            name = buff.readLine();
+            System.out.println("Sending " + name + " to server now...");
 
-                // Get client inputs from buff and prints out a reply
-                System.out.println("Enter name of file: ");
-                name = buff.readLine();
-                System.out.println("Sending " + name + " to server now...");
+            File f1 = new File(path);
+            boolean bool = f1.mkdir();
+            File f = new File(path,name);
 
-                File f = new File(name);
-                byte[] byteArray = new byte[(int) f.length()];
-                FileInputStream fileInput = new FileInputStream(f);
-                BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
-                DataInputStream dataInput = new DataInputStream(bufferedInput);
-                dataInput.readFully(byteArray, 0, byteArray.length);
-                OutputStream os = clientSocket.getOutputStream();
-                // Sending information of the file name and size to the server
-                DataOutputStream buffOutput = new DataOutputStream(os);
-                buffOutput.writeUTF(f.getName());
-                buffOutput.writeLong(byteArray.length);
-                buffOutput.write(byteArray, 0, byteArray.length);
-                buffOutput.flush();
-                System.out.println("File " + name + " sent\n");
+            byte[] byteArray = new byte[(int) f.length()];
+            FileInputStream fileInput = new FileInputStream(f);
+            BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
+            DataInputStream dataInput = new DataInputStream(bufferedInput);
+            dataInput.readFully(byteArray, 0, byteArray.length);
+            OutputStream os = clientSocket.getOutputStream();
+            //Sending information of the file name and size to the server
+            DataOutputStream buffOutput = new DataOutputStream(os);
+            buffOutput.writeUTF(f.getName());
+            buffOutput.writeLong(byteArray.length);
+            buffOutput.write(byteArray, 0, byteArray.length);
+            buffOutput.flush();
+            System.out.println("File " + name + " sent\n");
 
-                System.out.println("Do you wish to send another file to the server? \n1.Yes \n2.No");
+                /*System.out.println("Do you wish to send another file to the server? \n1.Yes \n2.No");
                 String answer = buff.readLine().toLowerCase(Locale.ROOT);
-                if (answer.equals("yes") || (Integer.parseInt(answer) == 1))
+                if(answer.equals("yes") || (Integer.parseInt(answer) == 1)){
                     sendFile();
-                else
-                    System.exit(1);
-            }
+                }
+                else System.exit(1);*/
+
 
         } catch (Exception e) {
             System.out.println("Failed sending file, specified file does not exist in the directory");
@@ -125,7 +119,7 @@ public class FileClient {
             }
             os.close();
             in.close();
-            System.out.println("File " + fileName + " received from Server.");
+            System.out.println("File "+fileName+" received from Server.");
 
         } catch (IOException ex) {
             Logger.getLogger(FileThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,3 +132,5 @@ public class FileClient {
     }
 
 }
+
+
