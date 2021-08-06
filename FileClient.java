@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.io.*;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,13 +21,17 @@ public class FileClient {
     // private static final String path = System.getProperty("user.dir") +
     // "\\Clients\\Client1\\";
     private static String userPath;
-    private static String startPath = System.getProperty("user.dir");
+    private static String path = System.getProperty("user.dir") + "\\Clients\\";
 
     public static void main(String[] args) throws IOException {
 
         try {
             clientSocket = new Socket(SERVER, PORT);
             System.out.println("Connected");
+
+            FileClientThread fct = new FileClientThread(clientSocket);
+            Thread threadFCT = new Thread(fct);
+            threadFCT.start();
 
             // InputStreamReader reads bytes and decodes them into characters
             // BufferedReader reads the characters as a string
@@ -41,23 +44,6 @@ public class FileClient {
         file = new PrintStream(clientSocket.getOutputStream());
         OutputStream os = clientSocket.getOutputStream();
         DataOutputStream buffOutput = new DataOutputStream(os);
-
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Enter path name: ");
-        userPath = scan.nextLine();
-        userPath = startPath + userPath;
-        System.out.println("Path is: " + userPath);
-        // buffOutput.writeUTF(userPath);
-
-        try {
-            File folder = new File(userPath);
-            if (!folder.exists()) {
-                folder.mkdirs();// creates directory for new files
-                folder.createNewFile();// populates the directory for said file
-            }
-        } catch (Exception e) {
-            System.out.println("Client Folder Check Failed, " + e.getMessage());
-        }
 
         try {
             System.out.println("1.Send File \n2.Receive File  \n3.Exit");
@@ -126,15 +112,16 @@ public class FileClient {
             InputStream in = clientSocket.getInputStream();
             DataInputStream dataInput = new DataInputStream(in);
             fileName = dataInput.readUTF();
-            OutputStream os = new FileOutputStream(userPath + fileName);
+
+            OutputStream os = new FileOutputStream(path + fileName);
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
                 os.write(buffer, 0, bytes);
                 size -= bytes;
             }
-            os.close();
-            in.close();
+            // os.close();
+            // in.close();
             System.out.println("File " + fileName + " received from Server.");
 
         } catch (IOException ex) {
