@@ -7,10 +7,11 @@ import java.io.*;
 
 public class FileClientThread implements Runnable {
     private Socket clientSocket;
-    private static String path = System.getProperty("user.dir") + "\\Clients\\";
+    private String path;
 
-    public FileClientThread(Socket client) {
+    public FileClientThread(Socket client, String path) {
         this.clientSocket = client;
+        this.path = path;
     }
 
     @Override
@@ -23,7 +24,7 @@ public class FileClientThread implements Runnable {
                 DataInputStream dataInput = new DataInputStream(in);
                 String fileName = dataInput.readUTF();
 
-                OutputStream os = new FileOutputStream(path + fileName);
+                OutputStream os = new FileOutputStream(path + "\\" + fileName);
                 long size = dataInput.readLong();
                 byte[] buffer = new byte[1024];
                 while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {

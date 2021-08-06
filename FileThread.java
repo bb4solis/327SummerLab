@@ -6,7 +6,7 @@ public class FileThread implements Runnable {
 
     private Socket clientSocket;
     private BufferedReader buff;
-    HashMap<Socket, String> clientPaths = new HashMap<Socket, String>();
+    HashMap<Socket, FileThread> clients = new HashMap<Socket, FileThread>();
     private static final String path = System.getProperty("user.dir") + "\\SharedFolder\\";
 
     DataInputStream dataInput;
@@ -102,7 +102,9 @@ public class FileThread implements Runnable {
     }
 
     public void broadcastFile(String name) {
-        for (Socket t : clientPaths.keySet()) {
+        for (Socket t : clients.keySet()) {
+            if (t == clientSocket)
+                continue;
             try {
                 File f = new File(path, name);
                 byte[] byteArray = new byte[(int) f.length()];
@@ -126,9 +128,8 @@ public class FileThread implements Runnable {
         }
     }
 
-    public void updateHashMap(HashMap<Socket, String> newClients) {
-        System.out.println("Hello");
-        clientPaths = newClients;
-        System.out.println(clientPaths);
+    public void updateHashMap(HashMap<Socket, FileThread> newClients) {
+        clients = newClients;
+        System.out.println(clients);
     }
 }

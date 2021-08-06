@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.io.*;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,11 +18,7 @@ public class FileClient {
     private static Socket clientSocket;
     private static BufferedReader buff;
     private static PrintStream file;
-    // change the path to whatever path you have
-    // private static final String path = System.getProperty("user.dir") +
-    // "\\Clients\\Client1\\";
     private static String userPath;
-    private static String path = System.getProperty("user.dir") + "\\Clients\\";
 
     public static void main(String[] args) throws IOException {
 
@@ -29,7 +26,12 @@ public class FileClient {
             clientSocket = new Socket(SERVER, PORT);
             System.out.println("Connected");
 
-            FileClientThread fct = new FileClientThread(clientSocket);
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Enter your path: ");
+            userPath = scan.nextLine();
+            userPath = System.getProperty("user.dir") + userPath;
+
+            FileClientThread fct = new FileClientThread(clientSocket, userPath);
             Thread threadFCT = new Thread(fct);
             threadFCT.start();
 
@@ -42,8 +44,6 @@ public class FileClient {
 
         // Used to send data to server
         file = new PrintStream(clientSocket.getOutputStream());
-        OutputStream os = clientSocket.getOutputStream();
-        DataOutputStream buffOutput = new DataOutputStream(os);
 
         try {
             System.out.println("1.Send File \n2.Receive File  \n3.Exit");
@@ -113,7 +113,7 @@ public class FileClient {
             DataInputStream dataInput = new DataInputStream(in);
             fileName = dataInput.readUTF();
 
-            OutputStream os = new FileOutputStream(path + fileName);
+            OutputStream os = new FileOutputStream(userPath + fileName);
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {

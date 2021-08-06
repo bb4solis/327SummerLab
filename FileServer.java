@@ -12,7 +12,6 @@ public class FileServer {
     public static void main(String[] args) throws IOException {
         HashMap<Thread, Socket> clients = new HashMap<Thread, Socket>();
         HashMap<Socket, FileThread> fileThreads = new HashMap<Socket, FileThread>();
-        HashMap<Socket, String> paths = new HashMap<Socket, String>();
 
         // TODO: Broadcast changes to every client
 
@@ -41,9 +40,7 @@ public class FileServer {
                 t.start();
 
                 new File(path + "\\Clients\\Client" + String.valueOf(counter)).mkdirs();
-                String userPath = path + "\\Clients\\Client" + String.valueOf(counter);
 
-                paths.put(client, userPath);
                 clients.put(t, client);
                 fileThreads.put(client, fileThread);
 
@@ -64,7 +61,7 @@ public class FileServer {
 
                 // Update clients
                 for (Socket socket : fileThreads.keySet()) {
-                    fileThreads.get(socket).updateHashMap(paths);
+                    fileThreads.get(socket).updateHashMap(fileThreads);
                 }
 
             } catch (IOException e) {
