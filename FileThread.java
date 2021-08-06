@@ -11,9 +11,17 @@ public class FileThread implements Runnable {
     private Socket clientSocket;
     private BufferedReader buff;
     HashMap<Thread, Socket> clients;
-    private static final String path = "E:\\CECS\\327SummerLab\\SharedFolder\\";
-
+    private static final String path = System.getProperty("user.dir") + "\\SharedFolder\\";
+    
     public FileThread(Socket client) {
+    	try {
+    		File folder = new File(path);
+    		if (!folder.exists()) {
+    			folder.mkdirs();
+    		}
+    	}catch (Exception e) {
+            System.out.println("Shared Folder Check Failed, " + e.getMessage());
+        }
         this.clientSocket = client;
     }
 
@@ -100,7 +108,7 @@ public class FileThread implements Runnable {
     }
 
     public void syncFile() {
-
+    	
     }
 
     public void updateHashMap(HashMap<Thread, Socket> newClients) {
