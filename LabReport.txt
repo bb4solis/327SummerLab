@@ -12,4 +12,5 @@ to abandon said idea due to the unnecessary complexity.
  
 A large bulk of this endevour was spent reading the documentaion regarding sockets and hashmaps, as well as variety of 
 file handling.Unfortunately, even with the countless hours spent reading documentation we still found ourselves having 
-to rework our code because hashmap wasn't properly storing our client or recieving a file.
+to rework our code because hashmap wasn't properly storing our client or recieving a file.The amount of frustration 
+experienced has been imeasurable, at one point we were sending files to the root for like three hours.
