@@ -1,6 +1,5 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FileServer {
@@ -13,7 +12,6 @@ public class FileServer {
         HashMap<Thread, Socket> clients = new HashMap<Thread, Socket>();
         HashMap<Socket, FileThread> fileThreads = new HashMap<Socket, FileThread>();
 
-        // TODO: Change to a hash map
         // TODO: Broadcast changes to every client
 
         try {
@@ -41,7 +39,12 @@ public class FileServer {
 
                 // Removes disconnected clients
                 for (Thread thread : clients.keySet()) {
-                    if (!thread.isAlive()) {
+                    try {
+                        if (!thread.isAlive()) {
+                            clients.remove(thread);
+                            fileThreads.remove(clients.get(thread));
+                        }
+                    } catch (Error e) {
                         clients.remove(thread);
                         fileThreads.remove(clients.get(thread));
                     }

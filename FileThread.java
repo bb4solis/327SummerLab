@@ -76,7 +76,7 @@ public class FileThread implements Runnable {
         }
     }
 
-    public void receiveFile(){
+    public void receiveFile() {
         try {
             int bytes;
             DataInputStream dataInput = new DataInputStream(clientSocket.getInputStream());
@@ -92,7 +92,7 @@ public class FileThread implements Runnable {
             output.close();
             dataInput.close();
 
-            System.out.println("File "+fileName+" received from client");
+            System.out.println("File " + fileName + " received from client");
 
         } catch (IOException ex) {
             ex.printStackTrace();
