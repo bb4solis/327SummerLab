@@ -22,10 +22,16 @@ public class FileClient {
     private static BufferedReader buff;
     private static PrintStream file;
     // change the path to whatever path you have
-    private static final String path = "E:\\CECS\\327SummerLab\\Clients\\Client1\\";
-
+    private static final String path = System.getProperty("user.dir") + "\\Clients\\Client1\\";
     public static void main(String[] args) throws IOException {
-
+    	try {
+    		File folder = new File(path);
+    		if (!folder.exists()) {
+    			folder.mkdirs();
+    		}
+    	}catch (Exception e) {
+            System.out.println("Client Folder Check Failed, " + e.getMessage());
+        }
         try {
             clientSocket = new Socket(SERVER, PORT);
             System.out.println("Connected");
@@ -83,7 +89,7 @@ public class FileClient {
                 name = buff.readLine();
                 System.out.println("Sending " + name + " to server now...");
 
-                File f = new File(name);
+                File f = new File(path, name);
                 byte[] byteArray = new byte[(int) f.length()];
                 FileInputStream fileInput = new FileInputStream(f);
                 BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
