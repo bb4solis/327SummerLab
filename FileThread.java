@@ -6,7 +6,7 @@ public class FileThread implements Runnable {
 
     private Socket clientSocket;
     private BufferedReader buff;
-    HashMap<Thread, Socket> clients;
+    HashMap<Socket, String> clientPaths = new HashMap<Socket, String>();
     private static final String path = System.getProperty("user.dir") + "\\SharedFolder\\";
 
     DataInputStream dataInput;
@@ -26,6 +26,7 @@ public class FileThread implements Runnable {
     @Override
     public void run() {
         try {
+            dataInput = new DataInputStream(clientSocket.getInputStream());
             // stream
             // BufferedReader reads text from the InputStreamReader from character input
             buff = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -93,44 +94,41 @@ public class FileThread implements Runnable {
             dataInput.close();
 
             System.out.println("File " + fileName + " received from client");
-            // broadcastFile(fileName);
+            broadcastFile(fileName);
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    // public void broadcastFile(String name) {
-    // for (Socket t : clientPaths.keySet()) {
-    // if (t == clientSocket)
-    // continue;
-    // System.out.println("Hello");
-    // try {
-    // File f = new File(clientPaths.get(t), name);
-    // byte[] byteArray = new byte[(int) f.length()];
-    // FileInputStream fileInput = new FileInputStream(f);
-    // BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
-    // dataInput = new DataInputStream(bufferedInput);
-    // dataInput.readFully(byteArray, 0, byteArray.length);
-    // System.out.println("World");
+    public void broadcastFile(String name) {
+        for (Socket t : clientPaths.keySet()) {
+            try {
+                File f = new File(path, name);
+                byte[] byteArray = new byte[(int) f.length()];
+                FileInputStream fileInput = new FileInputStream(f);
+                BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
+                dataInput = new DataInputStream(bufferedInput);
+                dataInput.readFully(byteArray, 0, byteArray.length);
 
-    // OutputStream os = t.getOutputStream();
-    // // Sending information of the file name and size to the server
-    // DataOutputStream buffOutput = new DataOutputStream(os);
-    // buffOutput.writeUTF(f.getName());
-    // buffOutput.writeLong(byteArray.length);
-    // buffOutput.write(byteArray, 0, byteArray.length);
-    // buffOutput.flush();
-    // System.out.println("File " + name + " sent to Client\n");
+                OutputStream os = t.getOutputStream();
+                // Sending information of the file name and size to the server
+                DataOutputStream buffOutput = new DataOutputStream(os);
+                buffOutput.writeUTF(f.getName());
+                buffOutput.writeLong(byteArray.length);
+                buffOutput.write(byteArray, 0, byteArray.length);
+                buffOutput.flush();
+                System.out.println("File " + name + " sent to Client\n");
 
-    // } catch (Exception e) {
-    // System.out.println(e.getMessage());
-    // }
-    // }
-    // }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
 
-    public void updateHashMap(HashMap<Thread, Socket> newClients) {
-        clients = newClients;
-        System.out.println(clients);
+    public void updateHashMap(HashMap<Socket, String> newClients) {
+        System.out.println("Hello");
+        clientPaths = newClients;
+        System.out.println(clientPaths);
     }
 }
