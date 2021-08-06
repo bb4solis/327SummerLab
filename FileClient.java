@@ -1,12 +1,9 @@
 
-import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,16 +19,13 @@ public class FileClient {
     private static BufferedReader buff;
     private static PrintStream file;
     // change the path to whatever path you have
-    private static final String path = System.getProperty("user.dir") + "\\Clients\\Client1\\";
+    // private static final String path = System.getProperty("user.dir") +
+    // "\\Clients\\Client1\\";
+    private static String userPath;
+    private static String startPath = System.getProperty("user.dir");
+
     public static void main(String[] args) throws IOException {
-    	try {
-    		File folder = new File(path);
-    		if (!folder.exists()) {
-    			folder.mkdirs();
-    		}
-    	}catch (Exception e) {
-            System.out.println("Client Folder Check Failed, " + e.getMessage());
-        }
+
         try {
             clientSocket = new Socket(SERVER, PORT);
             System.out.println("Connected");
@@ -45,9 +39,28 @@ public class FileClient {
 
         // Used to send data to server
         file = new PrintStream(clientSocket.getOutputStream());
+        OutputStream os = clientSocket.getOutputStream();
+        DataOutputStream buffOutput = new DataOutputStream(os);
+
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Enter path name: ");
+        userPath = scan.nextLine();
+        userPath = startPath + userPath;
+        System.out.println("Path is: " + userPath);
+        // buffOutput.writeUTF(userPath);
 
         try {
-            System.out.println("1.Send File \n2.Receive File \n3.Store Files \n4.Exit");
+            File folder = new File(userPath);
+            if (!folder.exists()) {
+                folder.mkdirs();// creates directory for new files
+                folder.createNewFile();// populates the directory for said file
+            }
+        } catch (Exception e) {
+            System.out.println("Client Folder Check Failed, " + e.getMessage());
+        }
+
+        try {
+            System.out.println("1.Send File \n2.Receive File  \n3.Exit");
             String choice;
             choice = buff.readLine();
             switch (Integer.parseInt(choice)) {
@@ -63,10 +76,6 @@ public class FileClient {
                     receiveFile(name);
                     break;
                 case 3:
-                    file.println("3");
-                    storeFile();
-                    break;
-                case 4:
                     System.exit(1);
                 default:
                     System.err.println("Enter number 1-4 to continue");
@@ -89,7 +98,8 @@ public class FileClient {
                 name = buff.readLine();
                 System.out.println("Sending " + name + " to server now...");
 
-                File f = new File(path, name);
+                File f = new File(userPath, name);
+                f.createNewFile();
                 byte[] byteArray = new byte[(int) f.length()];
                 FileInputStream fileInput = new FileInputStream(f);
                 BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
@@ -103,13 +113,6 @@ public class FileClient {
                 buffOutput.write(byteArray, 0, byteArray.length);
                 buffOutput.flush();
                 System.out.println("File " + name + " sent\n");
-
-                System.out.println("Do you wish to send another file to the server? \n1.Yes \n2.No");
-                String answer = buff.readLine().toLowerCase(Locale.ROOT);
-                if (answer.equals("yes") || (Integer.parseInt(answer) == 1))
-                    sendFile();
-                else
-                    System.exit(1);
             }
 
         } catch (Exception e) {
@@ -123,7 +126,7 @@ public class FileClient {
             InputStream in = clientSocket.getInputStream();
             DataInputStream dataInput = new DataInputStream(in);
             fileName = dataInput.readUTF();
-            OutputStream os = new FileOutputStream(path + fileName);
+            OutputStream os = new FileOutputStream(userPath + fileName);
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -139,9 +142,4 @@ public class FileClient {
             System.exit(1);
         }
     }
-
-    private static void storeFile() {
-
-    }
-
 }
