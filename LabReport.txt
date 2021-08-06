@@ -1,2 +1,14 @@
-Webroot, the opentext company would add that a peer-to-peer network, was a group of computers that are linked together with equal permission and responsibilites for processing data. Attempting to recreate such a feat prove to consist of many tears, and hours of rewriting code.
-  As described by the professor the 
+Defined as a group of computers that are linked together with equal permission and responsibilites for processing data. 
+The peer-to-peer network has quickly dominated the 21st century's workplace enviorment, reshaped entire industries and
+vastly improved connectivity and access to shared resources. The task at hand required us to design a program which allowed
+for two or more computers to synchronize fies across a local area network, with each computer being able to run its own local
+instance of the client software, and the file.Implenting such a feat would be a lot more difficult.
+
+For a group with relatively little experience designing networks,let alone working with distributive systems this project 
+allowed us to acquire a substancitated grasp on the content material. For example, as discussed in class no two computers 
+inherently operate with the same standardized time we attempted to establish our own local time.However, we would soon have
+to abandon said idea due to the unnecessary complexity.
+ 
+rebasing/and reverting 
+As we continued to large bulk of this endevour was spent reading the documentaion regarding sockets and hashmaps, as well as variety of 
+file handling.Throu
