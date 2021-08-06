@@ -12,6 +12,7 @@ public class FileServer {
     public static void main(String[] args) throws IOException {
         HashMap<Thread, Socket> clients = new HashMap<Thread, Socket>();
         HashMap<Socket, FileThread> fileThreads = new HashMap<Socket, FileThread>();
+        HashMap<Socket, String> paths = new HashMap<Socket, String>();
 
         // TODO: Broadcast changes to every client
 
@@ -19,7 +20,6 @@ public class FileServer {
             // Makes server
             server = new ServerSocket(PORT);
             System.out.println("Listening on port " + PORT);
-            System.out.println(server);
 
         } catch (IOException e) {
             System.out.println("Port already in use." + e.getMessage());
@@ -39,10 +39,12 @@ public class FileServer {
                 Thread t = new Thread(fileThread);
                 t.start();
 
-                new File(path + "\\Clients\\Client" + String.valueOf(counter)).mkdirs();
+                String pathName = path + "\\Clients\\Client" + String.valueOf(counter);
+                new File(pathName).mkdirs();
 
                 clients.put(t, client);
                 fileThreads.put(client, fileThread);
+                paths.put(client, pathName);
 
                 // Removes disconnected clients
                 for (Thread thread : clients.keySet()) {
@@ -50,10 +52,12 @@ public class FileServer {
                         if (!thread.isAlive()) {
                             clients.remove(thread);
                             fileThreads.remove(clients.get(thread));
+                            paths.remove(clients.get(thread));
                         }
                     } catch (Error e) {
                         clients.remove(thread);
                         fileThreads.remove(clients.get(thread));
+                        paths.remove(clients.get(thread));
                     }
                 }
 
@@ -61,7 +65,7 @@ public class FileServer {
 
                 // Update clients
                 for (Socket socket : fileThreads.keySet()) {
-                    fileThreads.get(socket).updateHashMap(fileThreads);
+                    fileThreads.get(socket).updateHashMap(paths);
                 }
 
             } catch (IOException e) {

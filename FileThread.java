@@ -6,7 +6,7 @@ public class FileThread implements Runnable {
 
     private Socket clientSocket;
     private BufferedReader buff;
-    HashMap<Socket, FileThread> clients = new HashMap<Socket, FileThread>();
+    HashMap<Socket, String> clients = new HashMap<Socket, String>();
     private static final String path = System.getProperty("user.dir") + "\\SharedFolder\\";
 
     DataInputStream dataInput;
@@ -70,7 +70,7 @@ public class FileThread implements Runnable {
             buffOutput.writeLong(byteArray.length);
             buffOutput.write(byteArray, 0, byteArray.length);
             buffOutput.flush();
-            System.out.println("File " + name + " sent to Client\n");
+            System.out.println("File " + name + " sent to Client");
 
         } catch (Exception e) {
             System.out.println("Failed sending file, specified file does not exist in the directory");
@@ -116,20 +116,21 @@ public class FileThread implements Runnable {
                 OutputStream os = t.getOutputStream();
                 // Sending information of the file name and size to the server
                 DataOutputStream buffOutput = new DataOutputStream(os);
+                buffOutput.writeUTF(clients.get(t));
                 buffOutput.writeUTF(f.getName());
                 buffOutput.writeLong(byteArray.length);
                 buffOutput.write(byteArray, 0, byteArray.length);
                 buffOutput.flush();
-                System.out.println("File " + name + " sent to Client\n");
+                System.out.println("File " + name + " sent to Client");
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
+        run();
     }
 
-    public void updateHashMap(HashMap<Socket, FileThread> newClients) {
+    public void updateHashMap(HashMap<Socket, String> newClients) {
         clients = newClients;
-        System.out.println(clients);
     }
 }

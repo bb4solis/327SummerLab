@@ -7,21 +7,21 @@ import java.io.*;
 
 public class FileClientThread implements Runnable {
     private Socket clientSocket;
-    private String path;
 
-    public FileClientThread(Socket client, String path) {
+    public FileClientThread(Socket client) {
         this.clientSocket = client;
-        this.path = path;
     }
 
     @Override
     public void run() {
+
         try {
+            InputStream in = clientSocket.getInputStream();
+            DataInputStream dataInput = new DataInputStream(in);
+            String path = dataInput.readUTF();
+
             while (true) {
-                System.out.println("RUNNING");
                 int bytes;
-                InputStream in = clientSocket.getInputStream();
-                DataInputStream dataInput = new DataInputStream(in);
                 String fileName = dataInput.readUTF();
 
                 OutputStream os = new FileOutputStream(path + "\\" + fileName);
@@ -31,14 +31,12 @@ public class FileClientThread implements Runnable {
                     os.write(buffer, 0, bytes);
                     size -= bytes;
                 }
-                // os.close();
-                // in.close();
-                System.out.println("File " + fileName + " received from Server.");
 
+                System.out.println("File " + fileName + " received from Server.");
             }
 
         } catch (IOException ex) {
-            System.out.println("ERROR");
+            System.out.println("");
         }
     }
 

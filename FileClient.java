@@ -18,7 +18,7 @@ public class FileClient {
     private static Socket clientSocket;
     private static BufferedReader buff;
     private static PrintStream file;
-    private static String userPath;
+    private static String userPath = System.getProperty("user.dir") + "\\Clients\\Client";
 
     public static void main(String[] args) throws IOException {
 
@@ -26,12 +26,7 @@ public class FileClient {
             clientSocket = new Socket(SERVER, PORT);
             System.out.println("Connected");
 
-            Scanner scan = new Scanner(System.in);
-            System.out.println("Enter your path: ");
-            userPath = scan.nextLine();
-            userPath = System.getProperty("user.dir") + userPath;
-
-            FileClientThread fct = new FileClientThread(clientSocket, userPath);
+            FileClientThread fct = new FileClientThread(clientSocket);
             Thread threadFCT = new Thread(fct);
             threadFCT.start();
 
@@ -44,7 +39,15 @@ public class FileClient {
 
         // Used to send data to server
         file = new PrintStream(clientSocket.getOutputStream());
+        Scanner scan = new Scanner(System.in);
+        name = "";
+        System.out.println("Enter your client number: ");
+        userPath = userPath + scan.nextLine();
 
+        menu();
+    }
+
+    public static void menu() {
         try {
             System.out.println("1.Send File \n2.Receive File  \n3.Exit");
             String choice;
@@ -67,15 +70,14 @@ public class FileClient {
                     System.err.println("Enter number 1-4 to continue");
                     break;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
     }
 
     public static void sendFile() {
         try {
-            name = "";
+
             // Loops until client exits
             while (!name.equals("bye")) {
 
@@ -99,10 +101,11 @@ public class FileClient {
                 buffOutput.write(byteArray, 0, byteArray.length);
                 buffOutput.flush();
                 System.out.println("File " + name + " sent\n");
+                menu();
             }
 
         } catch (Exception e) {
-            System.out.println("Failed sending file, specified file does not exist in the directory");
+            System.out.println(e.getMessage());
         }
     }
 
