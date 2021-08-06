@@ -11,9 +11,13 @@ public class FileThread implements Runnable {
     private Socket clientSocket;
     private BufferedReader buff;
     HashMap<Thread, Socket> clients;
-    private static final String path = "E:\\CECS\\327SummerLab\\SharedFolder\\";
-
+    private static final String path = System.getProperty("user.dir") + "\\SharedFolder\\";
+    
     public FileThread(Socket client) {
+    	File folder = new File(path);
+    	if (!folder.exists()) {
+    		folder.mkdirs();
+    	}
         this.clientSocket = client;
     }
 
