@@ -82,6 +82,7 @@ public class FileClient {
             name = buff.readLine();
             System.out.println("Sending " + name + " to server now...");
 
+            // Reads file
             File f = new File(userPath, name);
             f.createNewFile();
             byte[] byteArray = new byte[(int) f.length()];
@@ -89,17 +90,16 @@ public class FileClient {
             BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
             DataInputStream dataInput = new DataInputStream(bufferedInput);
             dataInput.readFully(byteArray, 0, byteArray.length);
-            OutputStream os = clientSocket.getOutputStream();
 
-            // Sending information of the file name and size to the server
+            // Sending information of the file to the server
+            OutputStream os = clientSocket.getOutputStream();
             DataOutputStream buffOutput = new DataOutputStream(os);
             buffOutput.writeUTF(f.getName());
             buffOutput.writeLong(byteArray.length);
             buffOutput.write(byteArray, 0, byteArray.length);
             buffOutput.flush();
             System.out.println("File " + name + " sent\n");
-            menu();
-
+            System.exit(1);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -108,10 +108,13 @@ public class FileClient {
     public static void receiveFile(String fileName) {
         try {
             int bytes;
+
+            // Gets server input
             InputStream in = clientSocket.getInputStream();
             DataInputStream dataInput = new DataInputStream(in);
             fileName = dataInput.readUTF();
 
+            // Reads server reply
             OutputStream os = new FileOutputStream(userPath + fileName);
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];

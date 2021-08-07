@@ -16,14 +16,19 @@ public class FileClientThread implements Runnable {
     public void run() {
 
         try {
+
+            // Reads user path from server
             InputStream in = clientSocket.getInputStream();
             DataInputStream dataInput = new DataInputStream(in);
             String path = dataInput.readUTF();
 
             while (true) {
                 int bytes;
+
+                // Reads file name from server
                 String fileName = dataInput.readUTF();
 
+                // Reads file and save in corresponding directory
                 OutputStream os = new FileOutputStream(path + "\\" + fileName);
                 long size = dataInput.readLong();
                 byte[] buffer = new byte[1024];

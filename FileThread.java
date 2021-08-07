@@ -55,6 +55,7 @@ public class FileThread implements Runnable {
 
     public void sendFile(String name) {
         try {
+            // Reads file
             File f = new File(path, name);
             byte[] byteArray = new byte[(int) f.length()];
             FileInputStream fileInput = new FileInputStream(f);
@@ -62,8 +63,8 @@ public class FileThread implements Runnable {
             DataInputStream dataInput = new DataInputStream(bufferedInput);
             dataInput.readFully(byteArray, 0, byteArray.length);
 
+            // Sending information of the file to client
             OutputStream os = clientSocket.getOutputStream();
-            // Sending information of the file name and size to the server
             DataOutputStream buffOutput = new DataOutputStream(os);
             buffOutput.writeUTF(f.getName());
             buffOutput.writeLong(byteArray.length);
@@ -79,10 +80,13 @@ public class FileThread implements Runnable {
     public void receiveFile() {
         try {
             int bytes;
+
+            // Gets client input
             dataInput = new DataInputStream(clientSocket.getInputStream());
             String fileName = dataInput.readUTF();
             OutputStream output = new FileOutputStream(path + fileName);
 
+            // Sends file to client
             long size = dataInput.readLong();
             byte[] buffer = new byte[1024];
             while (size > 0 && (bytes = dataInput.read(buffer, 0, (int) Math.min(buffer.length, size))) != -1) {
@@ -112,8 +116,8 @@ public class FileThread implements Runnable {
                 dataInput = new DataInputStream(bufferedInput);
                 dataInput.readFully(byteArray, 0, byteArray.length);
 
+                // Sending information of the file to client
                 OutputStream os = t.getOutputStream();
-                // Sending information of the file name and size to the server
                 DataOutputStream buffOutput = new DataOutputStream(os);
                 buffOutput.writeUTF(clients.get(t));
                 buffOutput.writeUTF(f.getName());
@@ -126,7 +130,6 @@ public class FileThread implements Runnable {
                 System.out.println(e.getMessage());
             }
         }
-        run();
     }
 
     public void updateHashMap(HashMap<Socket, String> newClients) {
