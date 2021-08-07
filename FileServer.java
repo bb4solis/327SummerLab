@@ -14,8 +14,6 @@ public class FileServer {
         HashMap<Socket, FileThread> fileThreads = new HashMap<Socket, FileThread>();
         HashMap<Socket, String> paths = new HashMap<Socket, String>();
 
-        // TODO: Broadcast changes to every client
-
         try {
             // Makes server
             server = new ServerSocket(PORT);
@@ -26,6 +24,7 @@ public class FileServer {
             return;
         }
 
+        // Number of clients
         int counter = 0;
 
         while (true) {

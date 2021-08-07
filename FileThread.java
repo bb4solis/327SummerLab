@@ -26,9 +26,8 @@ public class FileThread implements Runnable {
     @Override
     public void run() {
         try {
-            dataInput = new DataInputStream(clientSocket.getInputStream());
-            // stream
-            // BufferedReader reads text from the InputStreamReader from character input
+
+            // BufferedReader reads inputs from client
             buff = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             String choice = buff.readLine();
             while (choice != null) {
@@ -60,7 +59,7 @@ public class FileThread implements Runnable {
             byte[] byteArray = new byte[(int) f.length()];
             FileInputStream fileInput = new FileInputStream(f);
             BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
-            dataInput = new DataInputStream(bufferedInput);
+            DataInputStream dataInput = new DataInputStream(bufferedInput);
             dataInput.readFully(byteArray, 0, byteArray.length);
 
             OutputStream os = clientSocket.getOutputStream();

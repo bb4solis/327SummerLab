@@ -39,11 +39,11 @@ public class FileClient {
 
         // Used to send data to server
         file = new PrintStream(clientSocket.getOutputStream());
+
         Scanner scan = new Scanner(System.in);
         name = "";
         System.out.println("Enter your client number: ");
         userPath = userPath + scan.nextLine();
-
         menu();
     }
 
@@ -77,32 +77,28 @@ public class FileClient {
 
     public static void sendFile() {
         try {
+            // Get client inputs from buff and prints out a reply
+            System.out.println("Enter name of file: ");
+            name = buff.readLine();
+            System.out.println("Sending " + name + " to server now...");
 
-            // Loops until client exits
-            while (!name.equals("bye")) {
+            File f = new File(userPath, name);
+            f.createNewFile();
+            byte[] byteArray = new byte[(int) f.length()];
+            FileInputStream fileInput = new FileInputStream(f);
+            BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
+            DataInputStream dataInput = new DataInputStream(bufferedInput);
+            dataInput.readFully(byteArray, 0, byteArray.length);
+            OutputStream os = clientSocket.getOutputStream();
 
-                // Get client inputs from buff and prints out a reply
-                System.out.println("Enter name of file: ");
-                name = buff.readLine();
-                System.out.println("Sending " + name + " to server now...");
-
-                File f = new File(userPath, name);
-                f.createNewFile();
-                byte[] byteArray = new byte[(int) f.length()];
-                FileInputStream fileInput = new FileInputStream(f);
-                BufferedInputStream bufferedInput = new BufferedInputStream(fileInput);
-                DataInputStream dataInput = new DataInputStream(bufferedInput);
-                dataInput.readFully(byteArray, 0, byteArray.length);
-                OutputStream os = clientSocket.getOutputStream();
-                // Sending information of the file name and size to the server
-                DataOutputStream buffOutput = new DataOutputStream(os);
-                buffOutput.writeUTF(f.getName());
-                buffOutput.writeLong(byteArray.length);
-                buffOutput.write(byteArray, 0, byteArray.length);
-                buffOutput.flush();
-                System.out.println("File " + name + " sent\n");
-                menu();
-            }
+            // Sending information of the file name and size to the server
+            DataOutputStream buffOutput = new DataOutputStream(os);
+            buffOutput.writeUTF(f.getName());
+            buffOutput.writeLong(byteArray.length);
+            buffOutput.write(byteArray, 0, byteArray.length);
+            buffOutput.flush();
+            System.out.println("File " + name + " sent\n");
+            menu();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -123,8 +119,7 @@ public class FileClient {
                 os.write(buffer, 0, bytes);
                 size -= bytes;
             }
-            // os.close();
-            // in.close();
+
             System.out.println("File " + fileName + " received from Server.");
 
         } catch (IOException ex) {
