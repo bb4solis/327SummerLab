@@ -4,6 +4,10 @@ vastly improved connectivity and access to shared resources. The task at hand re
 for two or more computers to synchronize fies across a local area network, with each computer being able to run its own local
 instance of the client software, and the file.Implenting such a feat would be a lot more difficult.
 
+At the heart of all peer to peer networks lays an equal number of peer nodes that work as both clients and servers 
+typically implementing an overlay network.When deciding whether to implement either a unstructured or structed network
+we took into consideration that unstructured networks have very poor search sucesses. So in order to tackle these shortcomings 
+by using a distributed hash table.
 
 For a group with relatively little experience designing networks,let alone working with distributive systems this project 
 allowed us to acquire a substancitated grasp on the content material. For example, as discussed in class no two computers 
@@ -14,3 +18,4 @@ A large bulk of this endevour was spent reading the documentaion regarding socke
 file handling.Unfortunately, even with the countless hours spent reading documentation we still found ourselves having 
 to rework our code because hashmap wasn't properly storing our client or recieving a file.The amount of frustration 
 experienced has been imeasurable, at one point we were sending files to the root for like three hours.
+
