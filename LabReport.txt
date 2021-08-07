@@ -1,21 +1,7 @@
-Defined as a group of computers that are linked together with equal permission and responsibilites for processing data. 
-The peer-to-peer network has quickly dominated the 21st century's workplace enviorment, reshaped entire industries and
-vastly improved connectivity and access to shared resources. The task at hand required us to design a program which allowed
-for two or more computers to synchronize fies across a local area network, with each computer being able to run its own local
-instance of the client software, and the file.Implenting such a feat would be a lot more difficult.
+Defined as a group of computers that are linked together with equal permission and responsibilities for processing data. The peer-to-peer network has quickly dominated the 21st century's workplace environment, reshaped entire industries and vastly improved connectivity and access to shared resources. The task at hand required us to design a program which allowed for two or more computers to synchronize files across a local area network, with each computer being able to run its own local instance of the client software, and the file. Implementing such a feat would be a lot more difficult.
+At the heart of all peer to peer networks there are an equal number of peer nodes that work as both clients and servers typically implementing an overlay network. When deciding whether to implement either an unstructured or structed network we took into consideration that while unstructured networks are said to be easy to build they offer poor search success.
 
-At the heart of all peer to peer networks lays an equal number of peer nodes that work as both clients and servers 
-typically implementing an overlay network.When deciding whether to implement either a unstructured or structed network
-we took into consideration that unstructured networks have very poor search sucesses. So in order to tackle these shortcomings 
-by using a distributed hash table.
+For a group with relatively little experience designing networks, let alone working with distributive systems this project allowed us to acquire a substantiated grasp on the content material as well as the innovative features of GitHub, Visual Studio 2019,and Java 11. For example, as discussed in class no two computers inherently operate with the same standardized time we attempted to establish our own local time. However, we would soon have to abandon that idea as we concluded that we were too ambitious. Furthermore, we are incredibly grateful for the reprocessed feature as we experienced a situation in which a merger broke the code, and thankfully we were able to return to a prior version of the project.
+A large bulk of this endeavor was spent reading the documentation regarding sockets and hash maps, as well as variety of file handling. Unfortunately, even with the countless hours spent reading documentation we still found ourselves having to rework our code because our HashMap wasn't properly storing our client or receiving a file. The amount of frustration experienced has been immeasurable, at one point we were sending files to the root for like three hours. Until it finally occurred to us, we were using wrong key.
 
-For a group with relatively little experience designing networks,let alone working with distributive systems this project 
-allowed us to acquire a substancitated grasp on the content material. For example, as discussed in class no two computers 
-inherently operate with the same standardized time we attempted to establish our own local time.However, we would soon have
-to abandon said idea due to the unnecessary complexity.
- 
-A large bulk of this endevour was spent reading the documentaion regarding sockets and hashmaps, as well as variety of 
-file handling.Unfortunately, even with the countless hours spent reading documentation we still found ourselves having 
-to rework our code because hashmap wasn't properly storing our client or recieving a file.The amount of frustration 
-experienced has been imeasurable, at one point we were sending files to the root for like three hours.
 
